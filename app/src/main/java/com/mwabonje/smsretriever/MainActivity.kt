@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         binding.rvSms.adapter = adapter
 
         if (!hasReadSmsPermission()) {
-            requestReadAndSendSmsPermission()
+            requestReadSmsPermission()
             return
         }
 
@@ -67,15 +67,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * Runtime permission shenanigans
      */
-    private fun hasReadSmsPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this,
-            Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED
-    }
+    private fun hasReadSmsPermission() = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
 
-    private fun requestReadAndSendSmsPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this@MainActivity,
+    private fun requestReadSmsPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_SMS)
         ) {
             Log.d("MainActivity",
@@ -99,15 +95,10 @@ class MainActivity : AppCompatActivity() {
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED
             ) {
                 readSms()
-                // permission was granted, yay! Do the
-                // SMS related task you need to do.
             } else {
-                // permission denied, boo! Disable the
-                // functionality that depends on this permission.
+                finish()
             }
             return
         }
-
     }
-
 }
